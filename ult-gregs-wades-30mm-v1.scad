@@ -47,16 +47,11 @@ default_extruder_mount=jhead_mount;
 // Filament diameter
 // - use 1.80 or 1.85 for 1.75mm diameter filament
 // - use 3.00 for 3mm diameter filament
-//filament_diameter=1.85;
-filament_diameter=3.00;
+filament_diameter=1.85;
+//filament_diameter=3.00;
 
 // Base Extra Depth allows extra space for longer NEMA 17 steppers
 base_extra_depth=8;
-
-// Max pinch angle of the guidler against the hobbed bolt; affects the gap into which the idler bearing rotates.
-// Don't make this too exact or the idler will not be able to pinch well enough and friction may increase.
-// Reasonable range: 4 to 9
-guidler_pinch_angle=5;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -206,6 +201,8 @@ motor_mount_translation=[48,50+elevation,0];
 //motor_mount_translation=[52.5,38,0]; //original
 motor_mount_thickness=8;
 
+large_wheel_translation=[50.5-(7.4444+32.0111+0.25),34+elevation,0];
+
 m8_clearance_hole=8.8;
 hole_for_608=22.15; // AndrewBCN: was 22.3mm, decreased to 22.15mm
 608_diameter=22;
@@ -230,8 +227,6 @@ gear_separation_tolerance=0.25;
 gear_separation=7.4444+32.0111+gear_separation_tolerance;
 
 echo ("distance between axles (excluding tolerance)", gear_separation-gear_separation_tolerance);
-
-large_wheel_translation=[50.5-gear_separation,34+elevation,0];
 
 function motor_hole(hole)=[
 	motor_mount_translation[0],
@@ -328,7 +323,6 @@ module wade(
 			}
 
 			// The idler hinge support.
-			color("Orange",0.35)
 			translate(idler_fulcrum)
 			{
 				rotate(-15)
@@ -341,8 +335,8 @@ module wade(
 					idler_short_side/2+
 					idler_hinge_width+0.25+
 					layer_thickness]);
-				translate([idler_hinge_r+3,(idler_hinge_r*2+4)/2,layer_thickness*3])
-				cylinder(r=idler_hinge_r,h=10,$fn=50);
+				translate([idler_hinge_r+2,(idler_hinge_r*2+4)/2,layer_thickness*3])
+				cylinder(r=idler_hinge_r+1,h=10,$fn=50);
 				}
 				rotate(-15)
 				translate([-(idler_hinge_r+3),-idler_hinge_r-2,
@@ -447,12 +441,6 @@ echo("bhmh", mounting_holes)
 		cylinder(r=idler_hinge_r+1,h=idler_short_side-2*idler_hinge_width-0.5,center=true);
 	}
 
-	// Guidler pinch hole
-	translate(idler_fulcrum)
-	rotate([0,0,-guidler_pinch_angle])  // Rotate into pinch position
-		translate(idler_axis-idler_fulcrum-[0,0,4.5])
-			b608(h=wade_block_depth);
-
 	//translate(motor_mount_translation)
 	translate(large_wheel_translation)
 	{
@@ -468,7 +456,10 @@ echo("bhmh", mounting_holes)
 		
 			translate([0,0,20])
 			b608(h=9);
-
+		
+			translate([-13,0,9.5])
+			b608(h=wade_block_depth);
+		
 			translate([0,0,8+layer_thickness])
 			cylinder(r=m8_clearance_hole/2,h=wade_block_depth-(8+layer_thickness)+2);	
 
@@ -634,8 +625,8 @@ module wadeidler()
 			cube([idler_height,idler_long_side,idler_short_side],center=true);
 
 			//Filament Guide.
-			translate([guide_height/2+idler_height/2-1,idler_long_side/2-guide_length/2,0.75])
-			cube([guide_height+1,guide_length,9.5],center=true);
+			translate([guide_height/2+idler_height/2-1,idler_long_side/2-guide_length/2,0])
+			cube([guide_height+1,guide_length,8],center=true);
 			}
 
 			// The fulcrum Hinge
@@ -905,7 +896,7 @@ module wildseyed_mount_holes(insulator_d=12.7)
 	for (hole=[-1,1])
 	rotate(90,[1,0,0])
 	translate([hole*(extruder_recess_d/2-1.5),3+1.5,-wade_block_depth/2-1])
-	cylinder(r=1.5,h=wade_block_depth+2+base_extra_depth,$fn=10);
+	#cylinder(r=1.5,h=wade_block_depth+2+base_extra_depth,$fn=10);
 }
 
 module geeksbase_holes ()
