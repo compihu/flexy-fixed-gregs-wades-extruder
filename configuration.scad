@@ -12,15 +12,15 @@
 // Uncomment for metric settings
 // METRIC METRIC METRIC METRIC METRIC METRIC METRIC METRIC 
 
-include <inc/metric.scad>;
+include <metric.scad>;
 
 // Custom settings here, tailor to your supplies and print settings
 
 // Select your belt type ******************************************************
 
 //T2.5
-belt_tooth_distance = 2.5;
-belt_tooth_ratio = 0.5;
+//belt_tooth_distance = 2.5;
+//belt_tooth_ratio = 0.5;
 
 //T5 (strongly discouraged)
 //belt_tooth_distance = 5;
@@ -35,8 +35,8 @@ belt_tooth_ratio = 0.5;
 //belt_tooth_ratio = 0.64;
 
 //GT2
-//belt_tooth_distance = 2;
-//belt_tooth_ratio = 0.5;
+belt_tooth_distance = 2;
+belt_tooth_ratio = 0.5;
 
 // Choose bearing/bushing configuration ***************************************
 
@@ -122,7 +122,7 @@ idler_width = (idler_bearing == 0) ? 9 : 5;
 m3_nut_diameter_bigger = ((m3_nut_diameter  / 2) / cos (180 / 6))*2;
 
 // functions
-include <inc/functions.scad>
+include <functions.scad>
 
 
 // These constants define the geometry of the complete-printer.scad
