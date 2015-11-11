@@ -1,4 +1,4 @@
-// Ultimate Greg's Wade's Geared Extruder
+// Flexy-Fixed Greg's Wade's Geared Extruder
 // Licensed under the GNU GPLV3.
 // Copyright Greg Frost, 2010
 // Various modifications to the original source code by various authors:
@@ -14,6 +14,13 @@
 // a Prusa X-carriage. Mounting style is configurable for different models of
 // Prusa printer (i2, i3, etc.). Filament diameter is configurable to 1.75mm or
 // 3.00mm, although for new builds 1.75mm is recommended.
+
+// The idler pinch cutout is calculated in degrees instead of mm, allowing it
+// to be moved in and out properly by setting the guidler_pinch_angle. Using
+// a less aggressive angle (5 degrees instead of 10) creates a tighter tolerance
+// between the filament feed hole and the guidler bearing. This tighter
+// tolerance permits flexible filament such as NinjaFlex and PolyFlex to be
+// used successfully.
 
 // Note that there is also a complete layer fan subassembly that can easily
 // be attached to this extruder. See http://www.thingiverse.com/thing:540716
@@ -220,20 +227,15 @@ block_top_right=[wade_block_width,wade_block_height];
 layer_thickness=0.2; // AndrewBCN : 0.2mm recommended
 filament_feed_hole_d=(filament_diameter*1.1)/cos(180/8);
 hobbing_depth=2;
-echo ("filament_feed_hole_d", filament_feed_hole_d);
 
 //This is the distance from the centre of the filament to the centre of the hobbed bolt.
 filament_feed_hole_offset=8/2-hobbing_depth+filament_diameter/2;
-
-echo ("filament_feed_hole_offset", filament_feed_hole_offset);
 
 idler_nut_trap_depth=7.5;
 idler_nut_thickness=4;
 
 gear_separation_tolerance=0.25;
 gear_separation=7.4444+32.0111+gear_separation_tolerance;
-
-echo ("distance between axles (excluding tolerance)", gear_separation-gear_separation_tolerance);
 
 function motor_hole(hole)=[
 	motor_mount_translation[0],
@@ -406,7 +408,6 @@ function in_mask(mask,value)=(mask%(value*2))>(value-1);
 
 module block_holes(mounting_holes=default_mounting_holes)
 {
-echo("bhmh", mounting_holes)
 	//Round off the top of the block.
 	translate([0,wade_block_height-block_bevel_r,-1])
 	render()
