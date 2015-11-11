@@ -86,7 +86,7 @@ wade(hotend_mount=default_extruder_mount,mounting_holes=default_mounting_holes);
 translate([52,70,0]) bearing_washer();
 
 // Guidler
-translate([-20,0,15.25]) rotate([0,-90,0]) wadeidler();
+translate([-20,0,10.00-idler_axis[0]-0.0555]) rotate([0,-90,0]) wadeidler();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Visualisation
