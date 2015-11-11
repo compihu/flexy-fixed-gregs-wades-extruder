@@ -75,45 +75,42 @@ mounting_holes_symmetrical_24mm=3;  // Old-style Prusa i3, 24mm spaced M3 holes
 default_mounting_holes=mounting_holes_symmetrical_30mm;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Render the various parts
-// AndrewBCN : I suggest printing them separately, so comment out
-// the lines for the parts you don't want to print
+// Renderers
 
-// Extruder body
-wade(hotend_mount=default_extruder_mount,mounting_holes=default_mounting_holes);
+render_extruder=1;
+render_guidler=2;
+render_washer=4;
+render_alltogether=8;	// Show parts assembled, colored; do not use with other "render_*"
 
-// Bearing Washer
-translate([52,70,0]) bearing_washer();
+// Choose which parts to render here or in makefile
+//make_parts = render_extruder + render_guidler + render_washer ;
+// make_parts = render_extruder + render_washer ;
+// make_parts = render_guidler ;
+make_parts = render_alltogether ;
 
-// Guidler
-translate([-20,0,10.00-idler_axis[0]-0.0555]) rotate([0,-90,0]) wadeidler();
+if (in_mask (make_parts,render_extruder))
+	wade(hotend_mount=default_extruder_mount,mounting_holes=default_mounting_holes);
+
+if (in_mask (make_parts,render_washer))
+	translate([52,70,0]) bearing_washer();
+
+if (in_mask (make_parts,render_guidler))
+	translate([-20,0,10.00-idler_axis[0]-0.0555]) rotate([0,-90,0]) wadeidler();
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Visualisation
-// (disabled)
 
-//color("red")
-//x-carriage v2
-//translate([24,-32.75,base_extra_depth+wade_block_depth])
-  //rotate([0,0,0])
-    //import("../output/x-carriageV2.stl");
+if (in_mask (make_parts,render_alltogether)) {
+	echo ("IDLER_AXIS",idler_axis);
+	//ECHO: "IDLER_AXIS", [-5.2055, 42, 14]
+	//ECHO: "IDLER_AXIS", [-4.0555, 42, 14]
 
-
-//%translate([45.0, 55.50, 1]) //[46.78,55, 1]
-//  rotate([0, 0, 0])
-//    nema17(places=[0,1,1,1], holes=true, shadow=5);
-
-/*
-color("silver")
-translate(large_wheel_translation) {
-	translate([0,0,-15])import("../output/biggearmod_fixed.stl");
-	rotate([0,0,29.5]) translate([gear_separation,0, 5]) {
-		rotate([180,0,0]) import("../output/smallgearmod_fixed.stl");
-		rotate([0,0,-29.5]) translate([0,0,-4]) {nema17(places=[0,1,1,1], holes=true, shadow=5, $fn=7, h=8);
-		}
-	}
+	color("orange")
+		wade(hotend_mount=default_extruder_mount,mounting_holes=default_mounting_holes);
+	color("green",0.70)
+		wadeidler();
 }
-*/
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * Extruder
