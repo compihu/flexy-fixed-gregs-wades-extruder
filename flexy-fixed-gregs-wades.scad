@@ -74,6 +74,9 @@ mounting_holes_symmetrical_30mm=2;  // Standard Prusa i3, 30mm spaced M3 holes
 mounting_holes_symmetrical_24mm=3;  // Old-style Prusa i3, 24mm spaced M3 holes
 default_mounting_holes=mounting_holes_symmetrical_30mm;
 
+// Report
+echo("filament_diameter", filament_diameter);
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Renderers
 
