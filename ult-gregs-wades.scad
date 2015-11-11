@@ -1,4 +1,4 @@
-// Ultimate Greg's Wade's Geared Extruder - 30mm version
+// Ultimate Greg's Wade's Geared Extruder
 // Licensed under the GNU GPLV3. 
 // Copyright Greg Frost, 2010
 // Various modifications to the original source code by various authors:
@@ -8,10 +8,12 @@
 // - Misan (2013)
 // - Marty Rice (2013)
 // - AndrewBCN (August 2015)
+// - Phil Hord (October 2015)
 
-// This version of Greg's Wade's Geared Extruder was designed to fit
-// a standard Prusa i3 X-carriage with 30mm spaced M3 holes. Filament diameter is
-// configurable to 1.75mm or 3.00mm, although for new builds 1.75mm is recommended.
+// This edition of Greg's Wade's Geared Extruder is designed to fit
+// a Prusa X-carriage. Mounting style is configurable for different models of
+// Prusa printer (i2, i3, etc.). Filament diameter is configurable to 1.75mm or
+// 3.00mm, although for new builds 1.75mm is recommended.
 
 // Note that there is also a complete layer fan subassembly that can easily
 // be attached to this extruder. See http://www.thingiverse.com/thing:540716
@@ -56,8 +58,9 @@ base_extra_depth=8;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 mounting_holes_legacy=1;
-mounting_holes_symmetrical=2;
-default_mounting_holes=mounting_holes_symmetrical;
+mounting_holes_symmetrical_30mm=2;  // Standard Prusa i3, 30mm spaced M3 holes
+mounting_holes_symmetrical_24mm=3;  // Old-style Prusa i3, 24mm spaced M3 holes
+default_mounting_holes=mounting_holes_symmetrical_30mm;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Render the various parts
@@ -209,8 +212,7 @@ hole_for_608=22.15; // AndrewBCN: was 22.3mm, decreased to 22.15mm
 
 block_top_right=[wade_block_width,wade_block_height];
 
-layer_thickness=0.2; //0.35;
-//filament_diameter=3; // commented out here since we defined it above
+layer_thickness=0.2; // AndrewBCN : 0.2mm recommended
 filament_feed_hole_d=(filament_diameter*1.1)/cos(180/8);
 hobbing_depth=2;
 echo ("filament_feed_hole_d", filament_feed_hole_d);
@@ -410,15 +412,17 @@ echo("bhmh", mounting_holes)
 		cylinder(r=block_bevel_r,h=wade_block_depth+2,$fn=40);
 	}
 
-	//carriage mounting holes
+	//carriage mounting holes (distance between holes is 24mm - old or 30mm - new)
+	mh_center = (mounting_holes==mounting_holes_symmetrical_24mm) ?-11.6: -10;
+	mh_spacing = (mounting_holes==mounting_holes_symmetrical_24mm)?   24:  30;
 	translate([-48.5+64+4,1,3]) {
-		translate([-25,0,0]) { //-46
+		translate([mh_center-mh_spacing/2,0,0]) {
 			translate([0,0,layer_thickness+23]) 
 			  cylinder(r=m3_diameter/2, h=wade_block_depth+0.2+base_extra_depth, center=true,$fn=20);
 			cylinder(r=m3_nut_diameter/2+0.4, h=20, center=true,$fn=20);
 		}
 		
-		translate([5,0,0]) { //-22
+		translate([mh_center+mh_spacing/2,0,0]) {
 			translate([0,0,layer_thickness+23]) 
 			  cylinder(r=m3_diameter/2, h=wade_block_depth+0.2+base_extra_depth, center=true,$fn=20);
 			cylinder(r=m3_nut_diameter/2+0.4, h=20, center=true,$fn=20);
