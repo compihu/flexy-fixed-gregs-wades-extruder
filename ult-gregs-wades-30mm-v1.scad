@@ -388,7 +388,7 @@ module wade(
 			if (in_mask (hotend_mount,malcolm_extrusion_mount))
 				malcolm_extrusion_holes ();
 			if (in_mask(hotend_mount,bowden9_mount))
-				wildseyed_mount_holes(insulator_d=9);
+				bowden_mount_holes();
 		}
 		// AndrewBCN : small chamfer of top left corner
 		translate([-1,wade_block_height+4,15/2-1]) rotate([0,0,45]) cube([10,10,15], center=true);
@@ -907,6 +907,21 @@ module wildseyed_mount_holes(insulator_d=12.7)
 	rotate(90,[1,0,0])
 	translate([hole*(extruder_recess_d/2-1.5),3+1.5,-wade_block_depth/2-1])
 	#cylinder(r=1.5,h=wade_block_depth+2+base_extra_depth,$fn=10);
+}
+
+// Bowden tube fitting on bottom
+module bowden_mount_holes(thread_d=9, tube_d=6.5)  
+{  
+	extruder_recess_d=thread_d+0.4;
+	extruder_recess_h=10.5;
+
+	// Bowden fitting
+	translate([0,0,-1])
+        cylinder(r=extruder_recess_d/2,h=extruder_recess_h+1);
+	
+	// Bowden tube (extends past fitting)
+	translate([0,0,-1])
+        cylinder(r=tube_d/2,h=extruder_recess_h+5);
 }
 
 module geeksbase_holes ()
