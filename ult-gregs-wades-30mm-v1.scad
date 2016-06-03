@@ -40,18 +40,19 @@ geared_extruder_nozzle=128; // http://reprap.org/wiki/Geared_extruder_nozzle
 jhead_mount=256;
 geeksbase_mount=512;
 malcolm_extrusion_mount=1024;	//broken
+bowden9_mount=2048; // 9mm pneumatic bowden fitting
 
 // J-Head mount is (in principle) compatible with E3D V5/V6
-default_extruder_mount=jhead_mount;
+default_extruder_mount=bowden9_mount;
 
 // Filament diameter
 // - use 1.80 or 1.85 for 1.75mm diameter filament
 // - use 3.00 for 3mm diameter filament
-filament_diameter=1.85;
-//filament_diameter=3.00;
+//filament_diameter=1.85;
+filament_diameter=3.00;
 
 // Base Extra Depth allows extra space for longer NEMA 17 steppers
-base_extra_depth=8;
+base_extra_depth=15;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -184,7 +185,7 @@ wade_block_depth=28;
 
 block_bevel_r=6;
 
-base_thickness=10;
+base_thickness=4;
 base_length=70+2-6;
 base_leadout=25+2+1-6;
 //base_extra_depth=0; // commented out here since we defined it above
@@ -386,6 +387,8 @@ module wade(
 				geeksbase_holes ();
 			if (in_mask (hotend_mount,malcolm_extrusion_mount))
 				malcolm_extrusion_holes ();
+			if (in_mask(hotend_mount,bowden9_mount))
+				wildseyed_mount_holes(insulator_d=9);
 		}
 		// AndrewBCN : small chamfer of top left corner
 		translate([-1,wade_block_height+4,15/2-1]) rotate([0,0,45]) cube([10,10,15], center=true);
@@ -410,6 +413,10 @@ echo("bhmh", mounting_holes)
 		cylinder(r=block_bevel_r,h=wade_block_depth+2,$fn=40);
 	}
 
+/*
+    These are only for mounting to a sideways i3 frame
+    Move this into some mount-options function so we can offer alternative bases.
+    
 	//carriage mounting holes
 	translate([-48.5+64+4,1,3]) {
 		translate([-25,0,0]) { //-46
@@ -424,7 +431,7 @@ echo("bhmh", mounting_holes)
 			cylinder(r=m3_nut_diameter/2+0.4, h=20, center=true,$fn=20);
 		}
 	}
-
+*/
 	// Idler fulcrum hole.
 	translate(idler_fulcrum+[0,0,0.4])
 	cylinder(r=m3_diameter/2,h=idler_short_side-2*idler_hinge_width-0.5,center=true,$fn=16);
@@ -487,15 +494,17 @@ echo("bhmh", mounting_holes)
 			// Mounting holes on the base.
 			//translate([0,-base_thickness/2,0])
 			translate(
-				(mounting_holes==mounting_holes_legacy)?[-3.4,0,-1]:[0,0,0])
+				//(mounting_holes==mounting_holes_legacy)?[-3.4,0,-1]:[0,0,0])
+				(mounting_holes==mounting_holes_legacy)?[-3.4,0,-1]:[3.4,0,20])
 			for (mount=[0:1])
 			{
 				translate([-filament_feed_hole_offset+25*((mount<1)?1:-1),
 					-large_wheel_translation[1]-1-base_thickness/2,wade_block_depth/2])
 				rotate([-90,0,0])
 				rotate(360/16)
-				cylinder(r=m4_diameter/2,h=base_thickness+2,$fn=8);	
+				cylinder(r=m3_diameter/2,h=base_thickness+2,$fn=8);	
 	
+                /*
 				translate([-filament_feed_hole_offset+25*((mount<1)?1:-1),
 					-large_wheel_translation[1],
 					wade_block_depth/2])
@@ -503,6 +512,7 @@ echo("bhmh", mounting_holes)
 			//fixme: (correct height
 				//cylinder(r=m4_nut_diameter/2,h=base_thickness,$fn=6);	
 				cylinder(r=m4_nut_diameter/2,h=29.3,$fn=6);
+                */
 			}
 
 	}
